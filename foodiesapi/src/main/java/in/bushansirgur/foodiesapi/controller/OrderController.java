@@ -6,6 +6,7 @@ import in.bushansirgur.foodiesapi.io.OrderResponse;
 import in.bushansirgur.foodiesapi.service.OrderService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,10 +20,14 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping("/create")
-    @ResponseStatus(HttpStatus.CREATED)
-    public OrderResponse createOrderWithPayment(@RequestBody OrderRequest request) throws RazorpayException {
-        OrderResponse response = orderService.createOrderWithPayment(request);
-        return response;
+    public ResponseEntity<?> createOrderWithPayment(@RequestBody OrderRequest request) {
+        try {
+            OrderResponse response = orderService.createOrderWithPayment(request);
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", e.getMessage() != null ? e.getMessage() : "Unknown Error"));
+        }
     }
 
     @PostMapping("/verify")
