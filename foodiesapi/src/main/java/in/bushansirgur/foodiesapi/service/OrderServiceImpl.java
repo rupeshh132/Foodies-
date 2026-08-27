@@ -28,16 +28,16 @@ public class OrderServiceImpl implements OrderService{
     @Autowired
     private CartRespository cartRespository;
 
-    @Value("rzp_test_oEUXxmxu4DL7AK")
+    @Value("${razorpay_key}")
     private String RAZORPAY_KEY;
-    @Value("P8NEZbn6QL6rU7CJQKRV1uGh")
+    @Value("${razorpay_secret}")
     private String RAZORPAY_SECRET;
 
     @Override
     public OrderResponse createOrderWithPayment(OrderRequest request) throws RazorpayException {
         OrderEntity newOrder = convertToEntity(request);
-        System.out.println("Razorpay Key: " + RAZORPAY_KEY);
-        System.out.println("Razorpay Secret: " + RAZORPAY_SECRET);
+        // Safe logging without leaking secrets
+        System.out.println("Initializing RazorpayClient. Expected env variables: RAZORPAY_KEY and RAZORPAY_SECRET");
 
         newOrder = orderRepository.save(newOrder);
         try {
