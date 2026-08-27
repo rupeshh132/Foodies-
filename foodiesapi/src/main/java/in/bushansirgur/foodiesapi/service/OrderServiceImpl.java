@@ -49,21 +49,12 @@ public class OrderServiceImpl implements OrderService{
 
             Order razorpayOrder = razorpayClient.orders.create(orderRequest);
             System.out.println("Razorpay Order Created: " + razorpayOrder.toString());
+            newOrder.setRazorpayOrderId(razorpayOrder.get("id"));
         } catch (RazorpayException e) {
             System.err.println("Razorpay Error: " + e.getMessage());
             e.printStackTrace();
+            throw e; // Rethrow so it doesn't continue with a null razorpayOrderId
         }
-
-
-        //create razorpay payment order
-        RazorpayClient razorpayClient = new RazorpayClient(RAZORPAY_KEY, RAZORPAY_SECRET);
-        JSONObject orderRequest = new JSONObject();
-        orderRequest.put("amount", newOrder.getAmount() * 100);
-        orderRequest.put("currency", "INR");
-        orderRequest.put("payment_capture", 1);
-
-        Order razorpayOrder = razorpayClient.orders.create(orderRequest);
-        newOrder.setRazorpayOrderId(razorpayOrder.get("id"));
         //newOrder.setAmount(razorpayOrder.get("amount"));
         String loggedInUserId = userService.findByUserId();
         newOrder.setUserId(loggedInUserId);
