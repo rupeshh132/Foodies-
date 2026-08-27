@@ -21,9 +21,8 @@ public class AWSConfig {
 
     @Bean
     public S3Client s3Client() {
-        System.out.println("AWS Access Key: " + accessKey);
-        System.out.println("AWS Secret Key: " + secretKey);
-        System.out.println("AWS Region: " + region);
+        // Masked logging (or removed) to avoid credential leak
+        System.out.println("AWS Region initialized: " + region);
         S3Client s3 = S3Client.builder()
                 .region(Region.of(region))
                 .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(accessKey, secretKey)))

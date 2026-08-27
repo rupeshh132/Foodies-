@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService{
 
     private UserEntity convertToEntity(UserRequest request) {
         return UserEntity.builder()
-                .email(request.getEmail())
+                .email(request.getEmail().toLowerCase())
                 .password(passwordEncoder.encode(request.getPassword()))  // ✅ Encoding password
                 .name(request.getName())
                 .build();
